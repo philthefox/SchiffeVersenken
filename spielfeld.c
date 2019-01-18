@@ -19,6 +19,8 @@
 #define TREFFER_WASSER					         '+'  // Farbe weiss
 #define ZIEL_KANONE                      '0'  // Farbe gelb
 #define RAHMEN													 'X'  // Farbe weiss
+#define ABSTAND_RAND_X		5
+#define ABSTAND_RAND_Y		5
 
 /**
 * @brief Diese Funktion druckt auf dem Spielfeld an der Position zeile, spalte
@@ -29,7 +31,7 @@
 */
 void printWasser(const unsigned char zeile, const unsigned char spalte){
 	TFT_gotoxy(zeile + 1, spalte + 1);
-	TFT_putc(' ');
+	TFT_putc(WASSER);
 }
 
 /**
@@ -42,7 +44,7 @@ void printWasser(const unsigned char zeile, const unsigned char spalte){
 void printTrefferBoot(const unsigned char zeile, const unsigned char spalte){
 	TFT_gotoxy(zeile + 1, spalte + 1);
 	TFT_set_font_color(RED);
-	TFT_putc('*');
+	TFT_putc(TREFFER_BOOT);
 }
 
 /**
@@ -55,7 +57,7 @@ void printTrefferBoot(const unsigned char zeile, const unsigned char spalte){
 void printTrefferWasser(const unsigned char zeile, const unsigned char spalte){
 	TFT_gotoxy(zeile + 1, spalte + 1);
 	TFT_set_font_color(WHITE);
-	TFT_putc('+');
+	TFT_putc(TREFFER_WASSER);
 }
 
 /**
@@ -68,7 +70,7 @@ void printTrefferWasser(const unsigned char zeile, const unsigned char spalte){
 void printPositionKanone(const unsigned char zeile, const unsigned char spalte){
 	TFT_gotoxy(zeile + 1, spalte + 1);
 	TFT_set_font_color(YELLOW);
-	TFT_putc('O');
+	TFT_putc(ZIEL_KANONE);
 }
 
 /**
@@ -82,21 +84,40 @@ void printPositionKanone(const unsigned char zeile, const unsigned char spalte){
 */
 void initSpielfeld(void){
 	TFT_Init();
+	TFT_cursor_off();
+	TFT_gotoxy(3, 2);
+	TFT_puts("Schiffe versenken");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y);
+	TFT_puts("S5: Kanone hoch");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y + 1);
+	TFT_puts("S2: Kanone runter");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y + 2);
+	TFT_puts("S1: Kanone nach rechts");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y + 3);
+	TFT_puts("S6: Kanone nach links");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y + 4);
+	TFT_puts("S3: Kanonenschuss");
+	TFT_gotoxy(ABSTAND_RAND_X + ANZ_SPALTEN_SPIELFELD + 5, ABSTAND_RAND_Y + 5);
+	TFT_puts("S7: Neues Spiel");
 	
 	// Umrandung des Spielfelds mit weissen X
 	TFT_set_font_color(WHITE);
-	for (int i = 0; i < 8; i++) {
-		TFT_gotoxy(3, 3 + i);
-		TFT_putc('X');
-		TFT_gotoxy(10, 3 + i);
-		TFT_putc('X');
-		TFT_gotoxy(3 + i, 3);
-		TFT_putc('X');
-		TFT_gotoxy(3 + i, 10);
-		TFT_putc('X');
+	for (int i = 0; i < ANZ_SPALTEN_SPIELFELD + 2; i++) {
+		TFT_gotoxy(ABSTAND_RAND_X, ABSTAND_RAND_Y + i);
+		TFT_putc(RAHMEN);
+		TFT_gotoxy(ABSTAND_RAND_X + ANZ_ZEILEN_SPIELFELD + 1, ABSTAND_RAND_Y + i);
+		TFT_putc(RAHMEN);
+		TFT_gotoxy(ABSTAND_RAND_X + i, ABSTAND_RAND_Y);
+		TFT_putc(RAHMEN);
+		TFT_gotoxy(ABSTAND_RAND_X + i, ABSTAND_RAND_Y + ANZ_SPALTEN_SPIELFELD + 1);
+		TFT_putc(RAHMEN);
 	}
 	
-	TFT_set_window(FONT6x8, 4, 4, 6, 6);
+	TFT_set_window(FONT6x8, ABSTAND_RAND_X + 1, ABSTAND_RAND_Y + 1, ANZ_ZEILEN_SPIELFELD, ANZ_SPALTEN_SPIELFELD);
+	spielfeldZuruecksetzen();
+}
+
+void spielfeldZuruecksetzen() {
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
 			printWasser(i, j);

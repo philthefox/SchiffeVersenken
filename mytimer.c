@@ -31,7 +31,7 @@ void initMyTimer(void) {
 void sleep(const uint32_t delay){
 	uint32_t initialTime = getTimeStamp();
 	uint32_t actualTime = getTimeStamp();
-	while (actualTime - initialTime < delay) {
+	while (actualTime - initialTime < delay * CONVERT2US) {
 		actualTime = getTimeStamp();
 	}
 }

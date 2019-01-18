@@ -142,6 +142,9 @@ static void ddc(void) {
 	bool rechts_taster = false;
 	bool schuss_taster = false;
 	int anzahlSchuesse = 0;
+	initMyTimer();
+	initSpielfeld();
+	initSpiel();
 	
 	while (1) { // super loop
 		// Einlesen der Taster
@@ -154,7 +157,7 @@ static void ddc(void) {
 		
 		// Update des Zustands
 		if (reset_taster) {
-			initSpielfeld();
+			spielfeldZuruecksetzen();
 			initSpiel();
 			anzahlSchuesse = 0;
 		}
@@ -177,6 +180,12 @@ static void ddc(void) {
 		
 		// Treiben der Aktoren
 		setzeLEDHighByte(anzahlSchuesse);
+		printSpielfeld();
+		
+		// Warten, wenn Taster gedrueckt wurde
+		if (reset_taster || hoch_taster || runter_taster || links_taster || rechts_taster || schuss_taster) {
+			sleep(200*1000);
+		}
 	}	 
 }	
 
@@ -186,9 +195,8 @@ static void ddc(void) {
   */
 
 int main(void) {
-  Init_TI_Board();
-	initMyTimer();
-  ddc();
-  return 0;
+	Init_TI_Board();
+	ddc();
+	return 0;
 }
 // EOF

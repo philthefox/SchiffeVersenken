@@ -14,6 +14,8 @@
 
 void initSpielfeld(void);
 
+void spielfeldZuruecksetzen();
+
 void printWasser(const unsigned char x, const unsigned char y);
 
 void printTrefferBoot(const unsigned char x, const unsigned char y);

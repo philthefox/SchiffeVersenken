@@ -17,5 +17,8 @@ void initSpiel(void);
 void bewegeKanone(const enum richtung r);
 
 void schussKanone(void);
+
+void printSpielfeld();
+
 #endif
 //EOF

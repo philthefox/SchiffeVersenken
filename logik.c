@@ -14,12 +14,13 @@
 
 #define WASSER						0x00
 #define BOOT 				      0x01  // An der Position liegt ein Element des Boots
-#define SCHUSS 			      0x02  // Auf diese Position wurde schon geschossen
+#define SCHUSS_WASSER 			      0x02  // Auf diese Position wurde schon geschossen
+#define SCHUSS_BOOT				0x03
 
 #define START_POS_KANONE_ZEILE   0
 #define START_POS_KANONE_SPALTE  0
 
-static int spielfeld[6][6];
+static int spielfeld[ANZ_ZEILEN_SPIELFELD][ANZ_SPALTEN_SPIELFELD];
 static int pos_kanone_zeile;
 static int pos_kanone_spalte;
 
@@ -62,8 +63,8 @@ static void neueBoote(void){
 * @retval None
 */
 void initSpiel(void) {
-	for (int i = 0; i < 6; i++) {
-		for (int j = 0; j < 6; j++) {
+	for (int i = 0; i < ANZ_ZEILEN_SPIELFELD; i++) {
+		for (int j = 0; j < ANZ_SPALTEN_SPIELFELD; j++) {
 			spielfeld[i][j] = WASSER;
 		}
 	}
@@ -86,13 +87,12 @@ void schussKanone(void) {
 	switch (spielfeld[pos_kanone_zeile][pos_kanone_spalte]) {
 		case WASSER:
 			printTrefferWasser(pos_kanone_zeile, pos_kanone_spalte);
-			spielfeld[pos_kanone_zeile][pos_kanone_spalte] = SCHUSS;
+			spielfeld[pos_kanone_zeile][pos_kanone_spalte] = SCHUSS_WASSER;
 			break;
 		case BOOT:
 			printTrefferBoot(pos_kanone_zeile, pos_kanone_spalte);
-			spielfeld[pos_kanone_zeile][pos_kanone_spalte] = SCHUSS;
+			spielfeld[pos_kanone_zeile][pos_kanone_spalte] = SCHUSS_BOOT;
 			break;
-		case SCHUSS:
 		default: break;
 	}
 }
@@ -134,7 +134,30 @@ void bewegeKanone(const enum richtung r) {
 			break;
 		default: break;
 	}
-	// Ausgabe auf dem TFT-Bildschirm
+}
+
+void printSpielfeld() {
+	for (int i = 0; i < ANZ_ZEILEN_SPIELFELD; i++) {
+		for (int j = 0; j < ANZ_SPALTEN_SPIELFELD; j++) {
+			if ((i == pos_kanone_zeile) && (j == pos_kanone_spalte)) {
+				printPositionKanone(pos_kanone_zeile, pos_kanone_spalte);
+			}
+			else {
+				switch (spielfeld[i][j]) {
+					case WASSER:
+						printWasser(i, j);
+						break;
+					case SCHUSS_WASSER:
+						printTrefferWasser(i, j);
+						break;
+					case SCHUSS_BOOT:
+						printTrefferBoot(i, j);
+						break;
+					default: break;
+				}
+			}
+		}
+	}
 	printPositionKanone(pos_kanone_zeile, pos_kanone_spalte);
 }
 // EOF
