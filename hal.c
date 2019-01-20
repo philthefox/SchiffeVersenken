@@ -78,11 +78,11 @@ bool leseTaster(const unsigned char taster) {
 	for (int i = 0; i < ANZAHL_LESEVERSUCHE_PRELLEN; i++) {
 		wertSchalter = (0x01 << taster) != (GPIOE->IDR & (0x01 << taster));
 		sleep(DELTA_PRELLEN);
-		if (wertSchalter == (0x01 << taster) != (GPIOE->IDR & (0x01 << taster))) {
-			break;
+		if (wertSchalter == ((0x01 << taster) != (GPIOE->IDR & (0x01 << taster)))) {
+			return wertSchalter;
 		}
 	}
 	
-	return wertSchalter;
+	return false;
 }
 // EOF
